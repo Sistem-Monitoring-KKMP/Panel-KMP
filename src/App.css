@@ -1,0 +1,9 @@
+.password-toggle {
+  cursor: pointer;
+  user-select: none;
+}
+
+.password-toggle:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
