@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -175,23 +175,35 @@ export function PerformaBisnisForm({ performaBisnis, onSave }: PerformaBisnisFor
   }, [performaBisnis]);
 
   const handleInputChange = (section: string, field: string, value: any) => {
-    setFormData((prev) => ({
-      ...prev,
-      [section]: {
-        ...prev[section as keyof typeof prev],
-        [field]: value === "" ? null : value,
-      },
-    }));
+    setFormData((prev) => {
+      const currentSection = prev[section as keyof typeof prev];
+      if (typeof currentSection !== "object" || currentSection === null || Array.isArray(currentSection)) {
+        return prev;
+      }
+      return {
+        ...prev,
+        [section]: {
+          ...currentSection,
+          [field]: value === "" ? null : value,
+        },
+      };
+    });
   };
 
   const handleCheckboxChange = (section: string, field: string, checked: boolean) => {
-    setFormData((prev) => ({
-      ...prev,
-      [section]: {
-        ...prev[section as keyof typeof prev],
-        [field]: checked,
-      },
-    }));
+    setFormData((prev) => {
+      const currentSection = prev[section as keyof typeof prev];
+      if (typeof currentSection !== "object" || currentSection === null || Array.isArray(currentSection)) {
+        return prev;
+      }
+      return {
+        ...prev,
+        [section]: {
+          ...currentSection,
+          [field]: checked,
+        },
+      };
+    });
   };
 
   // Hubungan Lembaga handlers

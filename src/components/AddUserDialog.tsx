@@ -51,7 +51,7 @@ interface AddUserDialogProps {
 export function AddUserDialog({ open, onOpenChange, onSubmit }: AddUserDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [openAnggotaCombobox, setOpenAnggotaCombobox] = useState(false);
-  const [selectedRole, setSelectedRole] = useState<string>("");
+  const [_selectedRole, setSelectedRole] = useState<string>("");
 
   const {
     register,

@@ -15,7 +15,7 @@ const periodsFetcher = async (url: string): Promise<PeriodOption[]> => {
 
 // Fetcher for single performa
 const performaFetcher = async (url: string): Promise<Performa | null> => {
-  const result = await getFetcher<{ success: boolean; message: string; data: Performa }>(url);
+  const result = await getFetcher<Performa>(url);
 
   console.log("Raw API response:", result);
 

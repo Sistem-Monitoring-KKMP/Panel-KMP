@@ -68,7 +68,7 @@ export function PerformaOrganisasiForm({ performaOrganisasi, onSave }: PerformaO
       console.log("Loading performaOrganisasi data:", performaOrganisasi);
 
       const getRencanaStrategis = () => {
-        const source = (performaOrganisasi as any).rencana_strategis || performaOrganisasi.rencanaStrategis;
+        const source = (performaOrganisasi as any).rencana_strategis;
         if (source) {
           return {
             visi: source.visi ?? false,
@@ -82,7 +82,7 @@ export function PerformaOrganisasiForm({ performaOrganisasi, onSave }: PerformaO
       };
 
       const getPrinsipKoperasi = () => {
-        const source = (performaOrganisasi as any).prinsip_koperasi || performaOrganisasi.prinsipKoperasi;
+        const source = (performaOrganisasi as any).prinsip_koperasi || performaOrganisasi.prinsip_koperasi;
         if (source) {
           return {
             sukarela_terbuka: source.sukarela_terbuka ?? null,
@@ -98,7 +98,7 @@ export function PerformaOrganisasiForm({ performaOrganisasi, onSave }: PerformaO
       };
 
       const getRapatKoordinasi = () => {
-        const source = (performaOrganisasi as any).rapat_koordinasi || performaOrganisasi.rapatKoordinasi;
+        const source = (performaOrganisasi as any).rapat_koordinasi || performaOrganisasi.rapat_koordinasi;
         if (source) {
           return {
             rapat_pengurus: source.rapat_pengurus ?? "",
@@ -111,11 +111,19 @@ export function PerformaOrganisasiForm({ performaOrganisasi, onSave }: PerformaO
         return formData.rapat_koordinasi;
       };
 
+      // Validate and cast status to the correct type
+      const validateStatus = (status: any): "Aktif" | "TidakAktif" | "Pembentukan" | "" => {
+        if (status === "Aktif" || status === "TidakAktif" || status === "Pembentukan") {
+          return status;
+        }
+        return "";
+      };
+
       const newFormData = {
         jumlah_pengurus: performaOrganisasi.jumlah_pengurus,
         jumlah_pengawas: performaOrganisasi.jumlah_pengawas,
         jumlah_karyawan: performaOrganisasi.jumlah_karyawan,
-        status: performaOrganisasi.status || "",
+        status: validateStatus(performaOrganisasi.status),
         total_anggota: performaOrganisasi.total_anggota,
         anggota_aktif: performaOrganisasi.anggota_aktif,
         anggota_tidak_aktif: performaOrganisasi.anggota_tidak_aktif,
@@ -137,13 +145,19 @@ export function PerformaOrganisasiForm({ performaOrganisasi, onSave }: PerformaO
 
   const handleInputChange = (section: string | null, field: string, value: any) => {
     if (section) {
-      setFormData((prev) => ({
-        ...prev,
-        [section]: {
-          ...prev[section as keyof typeof prev],
-          [field]: value === "" ? null : value,
-        },
-      }));
+      setFormData((prev) => {
+        const currentSection = prev[section as keyof typeof prev];
+        if (typeof currentSection !== "object" || currentSection === null || Array.isArray(currentSection)) {
+          return prev;
+        }
+        return {
+          ...prev,
+          [section]: {
+            ...currentSection,
+            [field]: value === "" ? null : value,
+          },
+        };
+      });
     } else {
       setFormData((prev) => ({
         ...prev,
@@ -154,13 +168,19 @@ export function PerformaOrganisasiForm({ performaOrganisasi, onSave }: PerformaO
 
   const handleCheckboxChange = (section: string | null, field: string, checked: boolean) => {
     if (section) {
-      setFormData((prev) => ({
-        ...prev,
-        [section]: {
-          ...prev[section as keyof typeof prev],
-          [field]: checked,
-        },
-      }));
+      setFormData((prev) => {
+        const currentSection = prev[section as keyof typeof prev];
+        if (typeof currentSection !== "object" || currentSection === null || Array.isArray(currentSection)) {
+          return prev;
+        }
+        return {
+          ...prev,
+          [section]: {
+            ...currentSection,
+            [field]: checked,
+          },
+        };
+      });
     } else {
       setFormData((prev) => ({
         ...prev,

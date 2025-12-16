@@ -1,8 +1,8 @@
 import { type ComponentType, lazy } from "react";
-import { type LucideIcon, LayoutDashboard, Users, Building2 } from "lucide-react";
+import { type LucideIcon, Users, Building2 } from "lucide-react";
 
 // Lazy load pages
-const Dashboard = lazy(() => import("@/pages/Dashboard").then((m) => ({ default: m.Dashboard })));
+// const Dashboard = lazy(() => import("@/pages/Dashboard").then((m) => ({ default: m.Dashboard })));
 const ManajemenUser = lazy(() => import("@/pages/ManajemenUser").then((m) => ({ default: m.ManajemenUser })));
 const ManajemenAnggota = lazy(() => import("@/pages/ManajemenAnggota").then((m) => ({ default: m.ManajemenAnggota })));
 const ManajemenKoperasi = lazy(() => import("@/pages/ManajemenKoperasi").then((m) => ({ default: m.ManajemenKoperasi })));

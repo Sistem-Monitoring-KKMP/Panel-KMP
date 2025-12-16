@@ -26,7 +26,7 @@ export function ViewKoperasiDialog({ open, onOpenChange, koperasi }: ViewKoperas
           <div className="flex items-start justify-between">
             <div className="space-y-1">
               <h3 className="text-2xl font-bold">{koperasi.nama}</h3>
-              <Badge variant={koperasi.status === "AKTIF" ? "default" : "secondary"}>{koperasi.status}</Badge>
+              <Badge variant={koperasi.status === "Aktif" ? "default" : "secondary"}>{koperasi.status}</Badge>
             </div>
           </div>
 
@@ -65,7 +65,7 @@ export function ViewKoperasiDialog({ open, onOpenChange, koperasi }: ViewKoperas
                 <Shield className="h-5 w-5 text-muted-foreground mt-0.5" />
                 <div className="flex-1">
                   <p className="text-sm font-medium text-muted-foreground">Status</p>
-                  <Badge variant={koperasi.status === "AKTIF" ? "default" : "secondary"} className="mt-1">
+                  <Badge variant={koperasi.status === "Aktif" ? "default" : "secondary"} className="mt-1">
                     {koperasi.status}
                   </Badge>
                 </div>

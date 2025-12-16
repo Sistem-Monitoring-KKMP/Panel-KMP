@@ -10,7 +10,6 @@ import { EditKoperasiDialog } from "@/components/EditKoperasiDialog";
 import { AddKoperasiDialog } from "@/components/AddKoperasiDialog";
 import { useKoperasi } from "@/hooks/useKoperasi";
 import type { Koperasi } from "@/types/koperasi";
-import { toast } from "sonner";
 
 export function ManajemenKoperasi() {
   const [page, setPage] = useState(1);

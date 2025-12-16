@@ -100,7 +100,7 @@ export function ManajemenAnggota() {
     .filter((k) => selectedKoperasiIds.includes(k.id))
     .map((k) => ({
       id: k.id,
-      name: k.nama_koperasi,
+      name: k.nama,
     }));
 
   return (
@@ -150,11 +150,11 @@ export function ManajemenAnggota() {
                       <CommandEmpty>Koperasi tidak ditemukan.</CommandEmpty>
                       <CommandGroup>
                         {koperasiList.map((koperasi) => (
-                          <CommandItem key={koperasi.id} value={koperasi.nama_koperasi} onSelect={() => handleToggleKoperasi(koperasi.id)}>
+                          <CommandItem key={koperasi.id} value={koperasi.nama} onSelect={() => handleToggleKoperasi(koperasi.id)}>
                             <Checkbox checked={selectedKoperasiIds.includes(koperasi.id)} onCheckedChange={() => handleToggleKoperasi(koperasi.id)} className="mr-2" />
                             <div className="flex flex-col">
-                              <span className="text-sm">{koperasi.nama_koperasi}</span>
-                              <span className="text-xs text-muted-foreground">{koperasi.kode_koperasi}</span>
+                              <span className="text-sm">{koperasi.nama}</span>
+                              <span className="text-xs text-muted-foreground">{koperasi.no_badan_hukum || "-"}</span>
                             </div>
                           </CommandItem>
                         ))}
