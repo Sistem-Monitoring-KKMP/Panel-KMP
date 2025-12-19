@@ -20,8 +20,36 @@ export function PerformaTab({ koperasiId }: PerformaTabProps) {
   const [selectedPeriod, setSelectedPeriod] = useState<string>("");
   const { performa, isLoading: isLoadingPerforma, savePerforma, savePerformaBisnis, savePerformaOrganisasi } = usePerforma(koperasiId, selectedPeriod);
 
-  // Generate years from 2020 to 2030
-  const availableYears = Array.from({ length: 11 }, (_, i) => (2020 + i).toString());
+  // Generate months for current year and last 2 years
+  const generateAvailableMonths = () => {
+    const months: { value: string; label: string }[] = [];
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+
+    const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+
+    // Generate for current year and 2 years back
+    for (let year = currentYear; year >= currentYear - 2; year--) {
+      for (let month = 12; month >= 1; month--) {
+        // Skip future months for current year
+        if (year === currentYear && month > currentDate.getMonth() + 1) continue;
+
+        const monthValue = month < 10 ? "0" + month : "" + month;
+        const monthYear = year + "-" + monthValue;
+        const monthName = monthNames[month - 1];
+        const monthLabel = monthName + " " + year;
+
+        months.push({
+          value: monthYear,
+          label: monthLabel,
+        });
+      }
+    }
+
+    return months;
+  };
+
+  const availableMonths = generateAvailableMonths();
 
   // Form state untuk indikator utama
   const [formData, setFormData] = useState<PerformaFormInput>({
@@ -34,11 +62,12 @@ export function PerformaTab({ koperasiId }: PerformaTabProps) {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Set selected period ke tahun saat ini saat component mount
+  // Set selected period ke bulan saat ini saat component mount
   useEffect(() => {
     if (!selectedPeriod) {
-      const currentYear = new Date().getFullYear().toString();
-      setSelectedPeriod(currentYear);
+      const currentDate = new Date();
+      const currentMonth = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, "0")}`;
+      setSelectedPeriod(currentMonth);
     }
   }, [selectedPeriod]);
 
@@ -46,10 +75,12 @@ export function PerformaTab({ koperasiId }: PerformaTabProps) {
   useEffect(() => {
     if (performa) {
       console.log("Performa data loaded:", performa);
-      console.log("Kuadrant value from API:", performa.kuadrant, "Type:", typeof performa.kuadrant);
+
+      const periodeDate = new Date(performa.periode);
+      const monthYear = `${periodeDate.getFullYear()}-${(periodeDate.getMonth() + 1).toString().padStart(2, "0")}`;
 
       const newFormData = {
-        periode: new Date(performa.periode).getFullYear().toString(),
+        periode: monthYear,
         cdi: performa.cdi,
         bdi: performa.bdi,
         odi: performa.odi,
@@ -75,7 +106,17 @@ export function PerformaTab({ koperasiId }: PerformaTabProps) {
   };
 
   const handleInputChange = (field: keyof PerformaFormInput, value: string) => {
-    const numValue = value === "" ? null : parseInt(value);
+    let numValue: number | null = null;
+
+    if (value !== "") {
+      // Kuadrant adalah integer (1-4), sisanya adalah float
+      if (field === "kuadrant") {
+        numValue = parseInt(value);
+      } else {
+        numValue = parseFloat(value);
+      }
+    }
+
     console.log(`Updating ${field} to:`, numValue);
     setFormData((prev) => ({ ...prev, [field]: numValue }));
   };
@@ -134,7 +175,7 @@ export function PerformaTab({ koperasiId }: PerformaTabProps) {
                 <TrendingUp className="h-5 w-5" />
                 Data Performa Koperasi
               </CardTitle>
-              <CardDescription>Pilih periode tahun untuk melihat atau mengisi data performa</CardDescription>
+              <CardDescription>Pilih periode bulan untuk melihat atau mengisi data performa</CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -142,20 +183,20 @@ export function PerformaTab({ koperasiId }: PerformaTabProps) {
           <div className="flex items-center gap-4">
             <div className="flex-1 max-w-xs">
               <Label htmlFor="period-select" className="text-sm font-medium">
-                Pilih Periode (Tahun)
+                Pilih Periode (Bulan)
               </Label>
               <Select value={selectedPeriod} onValueChange={handlePeriodChange}>
                 <SelectTrigger id="period-select" className="mt-1.5">
                   <Calendar className="mr-2 h-4 w-4" />
-                  <SelectValue placeholder="Pilih tahun..." />
+                  <SelectValue placeholder="Pilih bulan..." />
                 </SelectTrigger>
                 <SelectContent>
-                  {availableYears.map((year) => {
-                    const periodData = periods.find((p) => p.year === year);
+                  {availableMonths.map((month) => {
+                    const periodData = periods.find((p) => p.month_year === month.value);
+                    const displayText = periodData?.cdi ? `${month.label} (CDI: ${periodData.cdi})` : month.label;
                     return (
-                      <SelectItem key={year} value={year}>
-                        Tahun {year}
-                        {periodData?.cdi && ` (CDI: ${periodData.cdi})`}
+                      <SelectItem key={month.value} value={month.value}>
+                        {displayText}
                       </SelectItem>
                     );
                   })}
@@ -167,7 +208,7 @@ export function PerformaTab({ koperasiId }: PerformaTabProps) {
               <div className="flex items-end gap-2">
                 <div className="text-sm">
                   <p className="text-muted-foreground">Periode yang dipilih:</p>
-                  <p className="font-semibold text-lg">{selectedPeriod}</p>
+                  <p className="font-semibold text-lg">{new Date(selectedPeriod + "-01").toLocaleDateString("id-ID", { month: "long", year: "numeric" })}</p>
                 </div>
               </div>
             )}
@@ -184,7 +225,11 @@ export function PerformaTab({ koperasiId }: PerformaTabProps) {
                 <BarChart3 className="h-5 w-5" />
                 Indikator Performa Utama
               </CardTitle>
-              <CardDescription>{performa ? `Edit data performa untuk periode ${selectedPeriod}` : `Isi data performa untuk periode ${selectedPeriod}`}</CardDescription>
+              <CardDescription>
+                {performa
+                  ? `Edit data performa untuk periode ${new Date(selectedPeriod + "-01").toLocaleDateString("id-ID", { month: "long", year: "numeric" })}`
+                  : `Isi data performa untuk periode ${new Date(selectedPeriod + "-01").toLocaleDateString("id-ID", { month: "long", year: "numeric" })}`}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               {isLoadingPerforma ? (
@@ -196,17 +241,17 @@ export function PerformaTab({ koperasiId }: PerformaTabProps) {
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div>
                       <Label htmlFor="cdi">CDI (Cooperative Development Index)</Label>
-                      <Input id="cdi" type="number" placeholder="Masukkan nilai CDI" value={formData.cdi ?? ""} onChange={(e) => handleInputChange("cdi", e.target.value)} />
+                      <Input id="cdi" type="number" step="0.01" placeholder="Masukkan nilai CDI" value={formData.cdi ?? ""} onChange={(e) => handleInputChange("cdi", e.target.value)} />
                     </div>
 
                     <div>
                       <Label htmlFor="bdi">BDI (Business Development Index)</Label>
-                      <Input id="bdi" type="number" placeholder="Masukkan nilai BDI" value={formData.bdi ?? ""} onChange={(e) => handleInputChange("bdi", e.target.value)} />
+                      <Input id="bdi" type="number" step="0.01" placeholder="Masukkan nilai BDI" value={formData.bdi ?? ""} onChange={(e) => handleInputChange("bdi", e.target.value)} />
                     </div>
 
                     <div>
                       <Label htmlFor="odi">ODI (Organization Development Index)</Label>
-                      <Input id="odi" type="number" placeholder="Masukkan nilai ODI" value={formData.odi ?? ""} onChange={(e) => handleInputChange("odi", e.target.value)} />
+                      <Input id="odi" type="number" step="0.01" placeholder="Masukkan nilai ODI" value={formData.odi ?? ""} onChange={(e) => handleInputChange("odi", e.target.value)} />
                     </div>
 
                     <div>

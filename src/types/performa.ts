@@ -183,7 +183,14 @@ export interface PerformaFormInput {
 }
 
 export interface PeriodOption {
+  id: number;
+  periode: string;
   year: string;
+  month: string;
+  month_year: string;
+  formatted: string;
   cdi: number | null;
-  has_data: boolean;
+  bdi: number | null;
+  odi: number | null;
+  kuadrant: number | null;
 }
