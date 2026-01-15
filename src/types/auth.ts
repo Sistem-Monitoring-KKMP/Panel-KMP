@@ -4,6 +4,7 @@ export interface User {
   username: string;
   role: "superadmin" | "admin" | "anggota";
   anggota_id: string | null;
+  koperasi_id: number | null;
 }
 
 // Update LoginResponse to match actual backend response

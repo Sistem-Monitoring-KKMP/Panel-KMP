@@ -77,8 +77,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Update state immediately
       setUser(userData);
 
-      // Navigate instead of window.location.href
-      navigate("/dashboard", { replace: true });
+      console.log("🔐 [Login] User data:", userData);
+      console.log("🔐 [Login] User role:", userData.role);
+
+      // Navigate based on user role
+      if (userData.role === "anggota") {
+        console.log("✅ [useAuth] Redirecting anggota to /kuesioner");
+        navigate("/kuesioner", { replace: true });
+      } else {
+        // For superadmin and admin
+        console.log("✅ [useAuth] Redirecting", userData.role, "to /manajemen-koperasi/profil");
+        navigate("/manajemen-koperasi/profil", { replace: true });
+      }
     } catch (error: any) {
       clearAuth();
       Cookies.remove("user", { path: "/" });

@@ -2,7 +2,9 @@ import { createBrowserRouter, Navigate, Outlet, useNavigate } from "react-router
 import { Suspense, useEffect } from "react";
 import { AuthProvider } from "@/hooks/useAuth";
 import { DashboardLayout } from "@/components/DashboardLayout";
+import { DashboardRedirect } from "@/components/DashboardRedirect";
 import { Login } from "@/pages/Login";
+import { Register } from "@/pages/Register";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { getAllRoutes } from "@/config/routes.config";
 
@@ -45,18 +47,41 @@ function LoadingFallback() {
 const generateRouteElements = () => {
   const allRoutes = getAllRoutes();
 
+  // Filter routes that have components and deduplicate by path
+  const seenPaths = new Set<string>();
+
   return allRoutes
-    .filter((route) => route.component) // Only routes with components
-    .map((route) => ({
-      path: route.path.replace("/", ""), // Remove leading slash
-      element: (
-        <ProtectedRoute allowedRoles={route.roles}>
-          <Suspense fallback={<LoadingFallback />}>
-            <route.component />
-          </Suspense>
-        </ProtectedRoute>
-      ),
-    }));
+    .filter((route) => {
+      // Skip routes without components
+      if (!route.component) return false;
+
+      // Skip parent routes that return null
+      if (route.component.toString().includes("null")) return false;
+
+      // Skip duplicate paths
+      if (seenPaths.has(route.path)) {
+        console.log("⚠️ [Router] Skipping duplicate route:", route.path);
+        return false;
+      }
+
+      seenPaths.add(route.path);
+      return true;
+    })
+    .map((route) => {
+      const cleanPath = route.path.startsWith("/") ? route.path.substring(1) : route.path;
+      console.log("📍 [Router] Registering route:", route.path, "→", cleanPath, "roles:", route.roles);
+
+      return {
+        path: cleanPath,
+        element: (
+          <ProtectedRoute allowedRoles={route.roles}>
+            <Suspense fallback={<LoadingFallback />}>
+              <route.component />
+            </Suspense>
+          </ProtectedRoute>
+        ),
+      };
+    });
 };
 
 export const router = createBrowserRouter([
@@ -68,6 +93,10 @@ export const router = createBrowserRouter([
         element: <Login />,
       },
       {
+        path: "/register",
+        element: <Register />,
+      },
+      {
         path: "/",
         element: (
           <ProtectedRoute>
@@ -77,7 +106,7 @@ export const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: <Navigate to="/manajemen-koperasi/profil" replace />,
+            element: <DashboardRedirect />,
           },
           ...generateRouteElements(),
         ],

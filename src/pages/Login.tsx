@@ -1,15 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useAuth } from "@/hooks/useAuth";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 
 const loginSchema = z.object({
   email: z.string().email("Alamat email tidak valid"),
@@ -19,8 +19,7 @@ const loginSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>;
 
 export function Login() {
-  const { login, isAuthenticated, isLoading } = useAuth();
-  const navigate = useNavigate();
+  const { login, isLoading } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -32,11 +31,7 @@ export function Login() {
     resolver: zodResolver(loginSchema),
   });
 
-  useEffect(() => {
-    if (!isLoading && isAuthenticated) {
-      navigate("/manajemen-koperasi/profil", { replace: true });
-    }
-  }, [isAuthenticated, isLoading, navigate]);
+  // Redirect handled by useAuth.tsx after successful login
 
   const onSubmit = async (data: LoginFormData) => {
     if (isSubmitting) return;
@@ -114,6 +109,14 @@ export function Login() {
             </Button>
           </form>
         </CardContent>
+        <CardFooter className="flex justify-center">
+          <p className="text-sm text-muted-foreground">
+            Belum punya akun?{" "}
+            <Link to="/register" className="font-medium text-primary hover:underline">
+              Daftar di sini
+            </Link>
+          </p>
+        </CardFooter>
       </Card>
     </div>
   );

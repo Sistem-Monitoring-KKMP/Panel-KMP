@@ -1,5 +1,5 @@
 import { type ComponentType, lazy } from "react";
-import { type LucideIcon, Users, Building2 } from "lucide-react";
+import { type LucideIcon, Users, Building2, ClipboardList, LayoutDashboard } from "lucide-react";
 
 // Lazy load pages
 // const Dashboard = lazy(() => import("@/pages/Dashboard").then((m) => ({ default: m.Dashboard })));
@@ -7,6 +7,11 @@ const ManajemenUser = lazy(() => import("@/pages/ManajemenUser").then((m) => ({ 
 const ManajemenAnggota = lazy(() => import("@/pages/ManajemenAnggota").then((m) => ({ default: m.ManajemenAnggota })));
 const ManajemenKoperasi = lazy(() => import("@/pages/ManajemenKoperasi").then((m) => ({ default: m.ManajemenKoperasi })));
 const PanelKoperasi = lazy(() => import("@/pages/PanelKoperasi").then((m) => ({ default: m.PanelKoperasi })));
+
+// Kuesioner pages for anggota
+const Kuesioner = lazy(() => import("@/pages/Kuesioner").then((m) => ({ default: m.Kuesioner })));
+const KuesionerOrganisasi = lazy(() => import("@/pages/KuesionerOrganisasi").then((m) => ({ default: m.KuesionerOrganisasi })));
+const KuesionerBisnis = lazy(() => import("@/pages/KuesionerBisnis").then((m) => ({ default: m.KuesionerBisnis })));
 
 export type UserRole = "superadmin" | "admin" | "anggota";
 
@@ -86,6 +91,33 @@ export const routes: RouteConfig[] = [
         component: PanelKoperasi,
         roles: ["superadmin", "admin"],
         showInSidebar: false,
+      },
+    ],
+  },
+  // Kuesioner Menu - For Anggota (Members)
+  {
+    path: "/kuesioner",
+    title: "Kuesioner",
+    component: Kuesioner,
+    icon: ClipboardList,
+    roles: ["anggota"],
+    showInSidebar: true,
+    children: [
+      {
+        path: "/kuesioner/organisasi",
+        title: "Kuesioner Organisasi",
+        component: KuesionerOrganisasi,
+        roles: ["anggota"],
+        showInSidebar: true,
+        parent: "Kuesioner",
+      },
+      {
+        path: "/kuesioner/bisnis",
+        title: "Kuesioner Bisnis",
+        component: KuesionerBisnis,
+        roles: ["anggota"],
+        showInSidebar: true,
+        parent: "Kuesioner",
       },
     ],
   },
