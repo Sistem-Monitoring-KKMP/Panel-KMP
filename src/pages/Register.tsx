@@ -115,7 +115,7 @@ export function Register() {
       setEmailCheck({ checking: true, available: null });
 
       try {
-        const response = await axios.post(`${API_BASE_URL}/register/check-email`, {
+        const response = await axios.post(`${API_BASE_URL}api/register/check-email`, {
           email: watchEmail,
         });
         setEmailCheck({ checking: false, available: response.data.available });
@@ -139,7 +139,7 @@ export function Register() {
       setUsernameCheck({ checking: true, available: null });
 
       try {
-        const response = await axios.post(`${API_BASE_URL}/register/check-username`, {
+        const response = await axios.post(`${API_BASE_URL}api/register/check-username`, {
           username: watchUsername,
         });
         setUsernameCheck({ checking: false, available: response.data.available });
@@ -163,7 +163,7 @@ export function Register() {
       setNikCheck({ checking: true, available: null });
 
       try {
-        const response = await axios.post(`${API_BASE_URL}/register/check-nik`, {
+        const response = await axios.post(`${API_BASE_URL}api/register/check-nik`, {
           nik: watchNik,
         });
         setNikCheck({ checking: false, available: response.data.available });
