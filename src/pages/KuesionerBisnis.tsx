@@ -9,7 +9,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, ArrowRight, Building2, Store, Banknote, TrendingUp, AlertTriangle, Plus, X, Save, CheckCircle2, HelpCircle, Trash2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Building2, Store, Banknote, TrendingUp, AlertTriangle, Plus, Save, CheckCircle2, HelpCircle, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { loadKuesionerBisnis, saveKuesionerBisnis } from "@/lib/kuesioner-api";
 import type { KuesionerBisnisFormData } from "@/types/kuesioner";
