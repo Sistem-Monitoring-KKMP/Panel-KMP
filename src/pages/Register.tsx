@@ -194,7 +194,7 @@ export function Register() {
     setIsSubmitting(true);
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/register`, data);
+      const response = await axios.post(`${API_BASE_URL}api/register`, data);
 
       if (response.data.success) {
         toast.success(response.data.message || "Registrasi berhasil! Silakan login.", {
