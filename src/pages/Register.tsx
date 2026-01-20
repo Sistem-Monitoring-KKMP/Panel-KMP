@@ -13,7 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import axios from "axios";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/api";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/";
 
 const registerSchema = z
   .object({
@@ -89,7 +89,7 @@ export function Register() {
   useEffect(() => {
     const fetchKoperasi = async () => {
       try {
-        const response = await axios.get(`${API_BASE_URL}/register/koperasi`);
+        const response = await axios.get(`${API_BASE_URL}api/register/koperasi`);
         if (response.data.success) {
           setKoperasiList(response.data.data);
         }
