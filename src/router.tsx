@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate, Outlet, useNavigate } from "react-router-dom";
+import { createBrowserRouter, Outlet, useNavigate } from "react-router-dom";
 import { Suspense, useEffect } from "react";
 import { AuthProvider } from "@/hooks/useAuth";
 import { DashboardLayout } from "@/components/DashboardLayout";

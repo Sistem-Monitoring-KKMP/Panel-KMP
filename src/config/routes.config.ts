@@ -1,5 +1,5 @@
 import { type ComponentType, lazy } from "react";
-import { type LucideIcon, Users, Building2, ClipboardList, LayoutDashboard } from "lucide-react";
+import { type LucideIcon, Users, Building2, ClipboardList } from "lucide-react";
 
 // Lazy load pages
 // const Dashboard = lazy(() => import("@/pages/Dashboard").then((m) => ({ default: m.Dashboard })));
