@@ -153,13 +153,13 @@ export const getBreadcrumbs = (currentPath: string): BreadcrumbItem[] => {
   const breadcrumbs: BreadcrumbItem[] = [
     {
       label: "Dashboard",
-      path: "/dashboard",
+      path: "/",
       isHome: true,
-      isCurrent: currentPath === "/dashboard",
+      isCurrent: currentPath === "/",
     },
   ];
 
-  if (currentPath !== "/dashboard") {
+  if (currentPath !== "/") {
     if (route.parent) {
       breadcrumbs.push({
         label: route.parent,
